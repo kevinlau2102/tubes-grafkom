@@ -7,6 +7,8 @@ const renderer = new THREE.WebGLRenderer({alpha:true});
 
 
 renderer.setSize(window.innerWidth, window.innerHeight);
+const controls = new THREE.OrbitControls(cam,renderer.domElement);
+controls.update();
 
 document.body.appendChild(renderer.domElement); 
 window.addEventListener("resize", function () {
@@ -18,7 +20,7 @@ window.addEventListener("resize", function () {
 const normal2 = new THREE.TextureLoader().load('assets/rumput_normal.jpg')
 const albedo2 = new THREE.TextureLoader().load('assets/rumput_albedo.jpg')
 
-const geometry2 = new THREE.PlaneGeometry( 30, 9 );
+const geometry2 = new THREE.PlaneGeometry( 25, 9 );
 const material2 = new THREE.MeshPhongMaterial( { map: albedo2 ,normalMap: normal2} );
 const plane = new THREE.Mesh( geometry2, material2 );
 plane.rotation.x = -1
@@ -42,6 +44,7 @@ function draw() {
 
     // sphere.rotation.x +=0.05
     renderer.render(scene, cam);
+    controls.update();
     requestAnimationFrame(draw);
 }
 draw();
