@@ -9,3 +9,9 @@ const renderer = new THREE.WebGLRenderer({alpha:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement); 
+window.addEventListener("resize", function () {
+    cam.aspect = window.innerWidth / window.innerHeight;
+    cam.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+})
