@@ -1,9 +1,9 @@
 const scene = new THREE.Scene();
-const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+const cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 
 cam.position.z = 5;
 
-const renderer = new THREE.WebGLRenderer({alpha:true});
+const renderer = new THREE.WebGLRenderer();
 
 
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -20,23 +20,42 @@ window.addEventListener("resize", function () {
 const normal2 = new THREE.TextureLoader().load('assets/rumput_normal.jpg')
 const albedo2 = new THREE.TextureLoader().load('assets/rumput_albedo.jpg')
 
-const geometry2 = new THREE.PlaneGeometry( 25, 9 );
-const material2 = new THREE.MeshPhongMaterial( { map: albedo2 ,normalMap: normal2} );
+const geometry2 = new THREE.PlaneGeometry( 40, 100 );
+const material2 = new THREE.MeshPhongMaterial( { map: albedo2 ,normalMap: normal2, side: THREE.DoubleSide} );
 const plane = new THREE.Mesh( geometry2, material2 );
-plane.rotation.x = -1
+plane.rotation.x = -1.56
 plane.position.y = -5
+plane.position.z = -15  
 scene.add( plane );
+
+const ball = new THREE.GLTFLoader();
+ball.load( 'assets/soccer_ball/scene.gltf', function ( gltf ) {
+    gltf.scene.scale.set(1, 1, 1);
+    gltf.scene.position.y = -2;
+    gltf.scene.position.z = -8;
+
+    scene.add( gltf.scene );
+
+}, function ( xhr ) {
+
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+}, function ( error ) {
+
+    console.error( error );
+
+} );
 
 
 
 const light = new THREE.PointLight();
 light.intensity = 1;
-light.position.set(-4, 0.5, 1);
+light.position.set(-4, 15, 1);
 scene.add(light);
 
 const light2 = new THREE.PointLight();
-light.intensity = 1;
-light.position.set(0.5, 0.3, 2);
+light2.intensity = 1;
+light2.position.set(0.5, 0.3, 1);
 scene.add(light2);
 
 // renderer.setClearColor( 0x87cefa, 1);
