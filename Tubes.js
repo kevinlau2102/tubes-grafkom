@@ -17,21 +17,21 @@ window.addEventListener("resize", function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
 })
-const normal2 = new THREE.TextureLoader().load('assets/rumput_normal.jpg')
-const albedo2 = new THREE.TextureLoader().load('assets/rumput_albedo.jpg')
+// const normal2 = new THREE.TextureLoader().load('assets/rumput_normal.jpg')
+// const albedo2 = new THREE.TextureLoader().load('assets/rumput_albedo.jpg')
 
-const geometry2 = new THREE.PlaneGeometry( 40, 100 );
-const material2 = new THREE.MeshPhongMaterial( { map: albedo2 ,normalMap: normal2, side: THREE.DoubleSide} );
-const plane = new THREE.Mesh( geometry2, material2 );
-plane.rotation.x = -1.56
-plane.position.y = -5
-plane.position.z = -15  
-scene.add( plane );
+// const geometry2 = new THREE.PlaneGeometry( 40, 100 );
+// const material2 = new THREE.MeshPhongMaterial( { map: albedo2 ,normalMap: normal2, side: THREE.DoubleSide} );
+// const plane = new THREE.Mesh( geometry2, material2 );
+// plane.rotation.x = -1.56
+// plane.position.y = -5
+// plane.position.z = -15  
+// scene.add( plane );
 
 const ball = new THREE.GLTFLoader();
 ball.load( 'assets/soccer_ball/scene.gltf', function ( gltf ) {
-    gltf.scene.scale.set(1, 1, 1);
-    gltf.scene.position.y = -2;
+    gltf.scene.scale.set(0.4, 0.4, 0.4);
+    gltf.scene.position.y = -2.5;
     gltf.scene.position.z = -8;
 
     scene.add( gltf.scene );
@@ -45,6 +45,23 @@ ball.load( 'assets/soccer_ball/scene.gltf', function ( gltf ) {
     console.error( error );
 
 } );
+
+const field = new THREE.GLTFLoader();
+field.load('assets/field/scene.gltf',function ( gltf ){
+    gltf.scene.scale.set(2, 2, 2);
+    gltf.scene.position.y = -7.5;
+    gltf.scene.position.z = 26;
+
+    scene.add( gltf.scene );
+},function ( xhr ) {
+
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+}, function ( error ) {
+
+    console.error( error );
+
+} )
 
 
 
