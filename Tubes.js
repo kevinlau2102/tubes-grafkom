@@ -7,10 +7,10 @@ const renderer = new THREE.WebGLRenderer();
 
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-const controls = new THREE.OrbitControls(cam,renderer.domElement);
+const controls = new THREE.OrbitControls(cam, renderer.domElement);
 controls.update();
 
-document.body.appendChild(renderer.domElement); 
+document.body.appendChild(renderer.domElement);
 window.addEventListener("resize", function () {
     cam.aspect = window.innerWidth / window.innerHeight;
     cam.updateProjectionMatrix();
@@ -29,39 +29,59 @@ window.addEventListener("resize", function () {
 // scene.add( plane );
 
 const ball = new THREE.GLTFLoader();
-ball.load( 'assets/soccer_ball/scene.gltf', function ( gltf ) {
+ball.load('assets/soccer_ball/scene.gltf', function (gltf) {
     gltf.scene.scale.set(0.4, 0.4, 0.4);
     gltf.scene.position.y = -2.5;
     gltf.scene.position.z = -8;
 
-    scene.add( gltf.scene );
+    scene.add(gltf.scene);
 
-}, function ( xhr ) {
+}, function (xhr) {
 
-    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
 
-}, function ( error ) {
+}, function (error) {
 
-    console.error( error );
+    console.error(error);
 
-} );
+});
 
 const field = new THREE.GLTFLoader();
-field.load('assets/field/scene.gltf',function ( gltf ){
+field.load('assets/field/scene.gltf', function (gltf) {
     gltf.scene.scale.set(2, 2, 2);
     gltf.scene.position.y = -7.5;
     gltf.scene.position.z = 26;
 
-    scene.add( gltf.scene );
-},function ( xhr ) {
+    scene.add(gltf.scene);
+}, function (xhr) {
 
-    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
 
-}, function ( error ) {
+}, function (error) {
 
-    console.error( error );
+    console.error(error);
 
-} )
+})
+
+const gawang = new THREE.GLTFLoader();
+gawang.load('assets/gawang/scene.gltf', function (gltf) {
+    gltf.scene.scale.set(0.023, 0.023, 0.023);
+    gltf.scene.position.y = -2.9;
+    gltf.scene.position.z = -21;
+    gltf.scene.position.x = 5.8;
+    gltf.scene.rotation.y = 3.15;
+
+
+    scene.add(gltf.scene);
+}, function (xhr) {
+
+    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+
+}, function (error) {
+
+    console.error(error);
+
+})
 
 
 
