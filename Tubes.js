@@ -1,3 +1,4 @@
+
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 
@@ -66,6 +67,51 @@ gawang.load('assets/gawang/scene.gltf', function (gltf) {
     console.error(error);
 
 })
+
+// const gk = new THREE.GLTFLoader();
+// gk.load('assets/gk/scene.gltf', function (gltf) {
+//     gltf.scene.scale.set(0.023, 0.023, 0.023);
+//     gltf.scene.position.y = -2.9;
+//     gltf.scene.position.z = -15;
+//     gltf.scene.position.x = 0;
+
+
+//     scene.add(gltf.scene);
+
+//     const gltfAnimation = THREE.AnimationLoader
+// }, function (xhr) {
+
+//     console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+
+// }, function (error) {
+
+//     console.error(error);
+
+// })
+    const loader = new THREE.FBXLoader();
+    loader.setPath('./assets/orang/');
+    loader.load('mremireh_o_desbiens.fbx', (fbx) => {
+      fbx.scale.setScalar(0.1);
+      fbx.traverse(c => {
+        c.castShadow = true;
+      });
+
+      const params = {
+        target: fbx,
+        camera: this._camera,
+      }
+    //   this._controls = new BasicCharacterControls(params);
+
+      const anim = new FBXLoader();
+      anim.setPath('./assets/orang/');
+      anim.load('walk.fbx', (anim) => {
+        const m = new THREE.AnimationMixer(fbx);
+        this._mixers.push(m);
+        const idle = m.clipAction(anim.animations[0]);
+        idle.play();
+      });
+      this._scene.add(fbx);
+    });
 
 
 
@@ -224,7 +270,6 @@ function draw() {
     renderer.render(scene, cam);
     controls.target.copy(ballBody.position);
     controls.update();
-
     moveBall();
     requestAnimationFrame(draw);
 }

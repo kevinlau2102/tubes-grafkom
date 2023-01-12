@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cassio Idle
+* source:	https://sketchfab.com/3d-models/cassio-idle-adf8a9191b4c429e80757ba5f2edfedb
+* author:	renno (https://sketchfab.com/renno)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cassio Idle" (https://sketchfab.com/3d-models/cassio-idle-adf8a9191b4c429e80757ba5f2edfedb) by renno (https://sketchfab.com/renno) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
