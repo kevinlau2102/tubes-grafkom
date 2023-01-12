@@ -3,6 +3,7 @@
     "cannon": "^0.6.2",
     "fflate": "^0.7.4",
     "three": "^0.147.0",
-    "three-fbx-loader": "^1.0.3"
+    "three-fbx-loader": "^1.0.3",
+    "three-to-cannon": "^4.3.0"
   }
 }
