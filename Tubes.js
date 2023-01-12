@@ -47,10 +47,10 @@ addEventListener("click", (e) => {
 
 
     if (((mouse.y + 0.25) * 8000) < 2100) {
-        ballBody.force.set(Math.sin(mouse.x * 2) * 5500, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
+        ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
 
     } else {
-        ballBody.force.set(Math.sin(mouse.x * 2) * 5500, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
+        ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
 
 
     }
