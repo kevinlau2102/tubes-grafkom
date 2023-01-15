@@ -1,5 +1,4 @@
-document.getElementById("myAudio4").loop = true
-document.getElementById("myAudio4").play();
+
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 
@@ -16,6 +15,74 @@ window.addEventListener("resize", function () {
     cam.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+});
+
+let start = false
+
+document.getElementById("startScreen").addEventListener("click", (e) => {
+    document.getElementById("myAudio4").loop = true;
+    document.getElementById("myAudio4").play();
+    var startScreen = document.getElementById("startScreen");
+    startScreen.innerHTML = ""
+    startScreen.style.backgroundColor = "transparent";
+    startScreen.style.opacity = "1";
+    if (kicked == false && start == true) {
+        document.getElementById("myAudio").play();
+
+
+        random = Math.round(Math.random() * 10);
+
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = (e.clientY / window.innerHeight) * -2 + 1;
+
+        console.log(e.clientX, e.clientY);
+
+        rayCast.setFromCamera(mouse, cam);
+        arrow.setDirection(rayCast.ray.direction);
+
+
+        console.log(random)
+
+        if (((mouse.y + 0.25) * 8000) < 2100) {
+            ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
+
+        } else {
+            ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
+
+
+        }
+        kiper()
+        checkMiss()
+
+        kicked = true
+
+        if (kicked == true) {
+            setTimeout(() => {
+                if (kicked == true) {
+                    console.log(kicked);
+                    meshGoalKeeper.position.y = -2.9;
+                    meshGoalKeeper.position.z = -19;
+                    meshGoalKeeper.position.x = 0;
+
+                    missMesh.visible = false;
+                    textMesh.visible = false;
+                    textMesh.position.z = -60;
+
+                    ballBody.position.set(0, -2, -8);
+                    ballBody.velocity.setZero();
+                    ballBody.angularVelocity.setZero();
+
+                    rayCast.setFromCamera({ x: 0, y: 0 }, cam);
+                    arrow.setDirection(rayCast.ray.direction);
+
+                    scoreAdd = false;
+                    kicked = false;
+                }
+
+            }, 6000)
+        }
+    }
+    start = true;
 })
 // const normal2 = new THREE.TextureLoader().load('assets/rumput_normal.jpg')
 // const albedo2 = new THREE.TextureLoader().load('assets/rumput_albedo.jpg')
@@ -81,61 +148,7 @@ fontLoader.load(
 
 
 addEventListener("click", (e) => {
-    if (kicked == false) {
-        document.getElementById("myAudio").play();
-
-        random = Math.round(Math.random() * 10);
-
-        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = (e.clientY / window.innerHeight) * -2 + 1;
-
-        console.log(e.clientX, e.clientY);
-
-        rayCast.setFromCamera(mouse, cam);
-        arrow.setDirection(rayCast.ray.direction);
-
-
-        console.log(random)
-
-        if (((mouse.y + 0.25) * 8000) < 2100) {
-            ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
-
-        } else {
-            ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
-
-
-        }
-        kiper()
-        checkMiss()
-
-        kicked = true
-
-        if (kicked == true) {
-            setTimeout(() => {
-                if (kicked == true) {
-                    console.log(kicked);
-                    meshGoalKeeper.position.y = -2.9;
-                    meshGoalKeeper.position.z = -19;
-                    meshGoalKeeper.position.x = 0;
-
-                    missMesh.visible = false;
-                    textMesh.visible = false;
-                    textMesh.position.z = -60;
-
-                    ballBody.position.set(0, -2, -8);
-                    ballBody.velocity.setZero();
-                    ballBody.angularVelocity.setZero();
-
-                    rayCast.setFromCamera({ x: 0, y: 0 }, cam);
-                    arrow.setDirection(rayCast.ray.direction);
-
-                    scoreAdd = false;
-                    kicked = false;
-                }
-
-            }, 6000)
-        }
-    }
+    
 });
 
 
@@ -680,3 +693,4 @@ function draw() {
 }
 
 draw();
+
