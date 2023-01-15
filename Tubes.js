@@ -32,7 +32,7 @@ window.addEventListener("resize", function () {
 let rayCast = new THREE.Raycaster();
 let mouse = {};
 let selected;
-let random = Math.round(Math.random()*10);
+let random = Math.round(Math.random() * 10);
 let arrow = new THREE.ArrowHelper(rayCast.ray.direction, cam.position, 300, 0xFF0000);
 scene.add(arrow);
 
@@ -46,35 +46,20 @@ addEventListener("click", (e) => {
     let items = rayCast.intersectObjects(scene.children);
     arrow.setDirection(rayCast.ray.direction);
 
-    
+
     console.log(random)
 
     if (((mouse.y + 0.25) * 8000) < 2100) {
         ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
-        if(random >= 0 && random <= 3){
-            meshGoalKeeper.position.x -= Math.round(Math.random()*4) + 0.5;
-        }
-        else if(random > 3 && random <=7){
-            meshGoalKeeper.position.x += Math.round(Math.random()*4) + 0.5;
-        }
-        else {
-            console.log(random)
-        }
+
         // meshGoalKeeper.position.x -= Math.random(5) + 2;
     } else {
         ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
-        if(random >= 0 && random <= 3){
-            meshGoalKeeper.position.x -= Math.round(Math.random()*4) + 0.5;
-        }
-        else if(random > 3 && random <=7){
-            meshGoalKeeper.position.x += Math.round(Math.random()*4) + 0.5;
-        }
-        else {
-            console.log(random)
-        }
+
         // meshGoalKeeper.position.x -= Math.random(5) + 2;
 
     }
+    kiper()
 
 
     items.forEach((i) => {
@@ -84,6 +69,31 @@ addEventListener("click", (e) => {
         }
     });
 });
+function kiper() {
+    if (random >= 0 && random <= 3) {
+        meshGoalKeeper.position.x -=  0.1;
+        console.log(meshGoalKeeper.position.x)
+        if (meshGoalKeeper.position.x <= -4) {
+            cancelAnimationFrame(kiper)
+        }else{
+            requestAnimationFrame(kiper)
+        }
+
+    }
+    else if (random > 3 && random <= 7) {
+        meshGoalKeeper.position.x +=  0.1;
+        console.log(meshGoalKeeper.position.x)
+        if (meshGoalKeeper.position.x >= 4) {
+            cancelAnimationFrame(kiper)
+        }
+        else{
+            requestAnimationFrame(kiper)
+        }
+    }
+    else {
+        console.log(random)
+    }    
+}
 
 
 const field = new THREE.GLTFLoader();
