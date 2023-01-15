@@ -1,4 +1,5 @@
-
+document.getElementById("myAudio4").loop = true
+document.getElementById("myAudio4").play();
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 
@@ -81,6 +82,7 @@ fontLoader.load(
 
 addEventListener("click", (e) => {
     if (kicked == false) {
+        document.getElementById("myAudio").play();
 
         random = Math.round(Math.random() * 10);
 
@@ -202,6 +204,7 @@ let missMesh = new THREE.Mesh();
 function checkMiss() {
     setTimeout(() => {
         if (textMesh.visible == false) {
+            document.getElementById("myAudio3").play();
             fontLoader.load(
                 // resource URL
                 'node_modules/three/examples/fonts/helvetiker_bold.typeface.json',
@@ -491,6 +494,9 @@ ballBody.addEventListener('collide', function (e) {
 
         if (scoreAdd == false) {
             scene.remove(scoreMesh);
+            setTimeout(() =>{
+                document.getElementById("myAudio2").play();
+            },100)
 
             score += 1;
             fontLoader.load(
@@ -508,7 +514,7 @@ ballBody.addEventListener('collide', function (e) {
 
                     scoreMesh = new THREE.Mesh(geometry, [
                         new THREE.MeshPhongMaterial({ color: 0xFFFFFF }),
-                        new THREE.MeshPhongMaterial({ color: 0xFF0000 })
+                        new THREE.MeshPhongMaterial({ color: 0xFFFFFF })
                     ]);
 
                     scoreMesh.position.x = -30;
