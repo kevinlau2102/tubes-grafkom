@@ -4,12 +4,10 @@ const cam = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeig
 
 cam.position.z = 5;
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ alpha: true });
 
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-const controls = new THREE.OrbitControls(cam, renderer.domElement);
-controls.update();
 
 document.body.appendChild(renderer.domElement);
 window.addEventListener("resize", function () {
@@ -31,68 +29,136 @@ window.addEventListener("resize", function () {
 
 let rayCast = new THREE.Raycaster();
 let mouse = {};
-let selected;
-let random = Math.round(Math.random() * 10);
-let arrow = new THREE.ArrowHelper(rayCast.ray.direction, cam.position, 300, 0xFF0000);
+let random;
+let arrow = new THREE.ArrowHelper(rayCast.ray.direction, cam.position, 40, 0xFF0000);
 scene.add(arrow);
 
-addEventListener("click", (e) => {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = (e.clientY / window.innerHeight) * -2 + 1;
+let kicked = false;
 
-    console.log(e.clientX, e.clientY);
+let score = 0;
+let scoreAdd = false;
 
-    rayCast.setFromCamera(mouse, cam);
-    let items = rayCast.intersectObjects(scene.children);
-    arrow.setDirection(rayCast.ray.direction);
+const fontLoader = new THREE.FontLoader();
 
+fontLoader.load(
+    // resource URL
+    'node_modules/three/examples/fonts/helvetiker_bold.typeface.json',
 
-    console.log(random)
+    // onLoad callback
+    function (font) {
+        const geometry = new THREE.TextGeometry('Score: ' + score, {
+            font: font,
+            size: 1,
+            height: 1,
 
-    if (((mouse.y + 0.25) * 8000) < 2100) {
-        ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
+        });
 
-        // meshGoalKeeper.position.x -= Math.random(5) + 2;
-    } else {
-        ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
+        scoreMesh = new THREE.Mesh(geometry, [
+            new THREE.MeshPhongMaterial({ color: 0xFFFFFF }),
+            new THREE.MeshPhongMaterial({ color: 0xFFFFFF })
+        ]);
 
-        // meshGoalKeeper.position.x -= Math.random(5) + 2;
+        scoreMesh.position.x = -30;
+        scoreMesh.position.z = -30;
+        scoreMesh.position.y = 12;
+        scoreMesh.rotation.y = 0.8
 
+        scene.add(scoreMesh)
+
+    },
+
+    // onProgress callback
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+
+    // onError callback
+    function (err) {
+        console.log('An error happened');
     }
-    kiper()
+);
 
 
-    items.forEach((i) => {
-        if (i.object.name == "defaultMaterial") {
-            console.log(i.object.name);
-            selected = i.object.name
+addEventListener("click", (e) => {
+    if (kicked == false) {
+
+        random = Math.round(Math.random() * 10);
+
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = (e.clientY / window.innerHeight) * -2 + 1;
+
+        console.log(e.clientX, e.clientY);
+
+        rayCast.setFromCamera(mouse, cam);
+        arrow.setDirection(rayCast.ray.direction);
+
+
+        console.log(random)
+
+        if (((mouse.y + 0.25) * 8000) < 2100) {
+            ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 10000, (mouse.y - 1) * 7000)
+
+        } else {
+            ballBody.force.set(Math.sin(mouse.x * 2) * 7600, (mouse.y + 0.25) * 8000, (mouse.y - 1) * 7000)
+
+
         }
-    });
+        kiper()
+        checkMiss()
+
+        kicked = true
+
+        if (kicked == true) {
+            setTimeout(() => {
+                if (kicked == true) {
+                    console.log(kicked);
+                    meshGoalKeeper.position.y = -2.9;
+                    meshGoalKeeper.position.z = -19;
+                    meshGoalKeeper.position.x = 0;
+
+                    missMesh.visible = false;
+                    textMesh.visible = false;
+                    textMesh.position.z = -60;
+
+                    ballBody.position.set(0, -2, -8);
+                    ballBody.velocity.setZero();
+                    ballBody.angularVelocity.setZero();
+
+                    rayCast.setFromCamera({ x: 0, y: 0 }, cam);
+                    arrow.setDirection(rayCast.ray.direction);
+
+                    scoreAdd = false;
+                    kicked = false;
+                }
+
+            }, 6000)
+        }
+    }
 });
+
+
 function kiper() {
     if (random >= 0 && random <= 3) {
-        meshGoalKeeper.position.x -=  0.1;
-        console.log(meshGoalKeeper.position.x)
+        meshGoalKeeper.position.x -= 0.1;
         if (meshGoalKeeper.position.x <= -4) {
             cancelAnimationFrame(kiper)
-        }else{
+        } else {
             requestAnimationFrame(kiper)
         }
 
     }
     else if (random > 3 && random <= 7) {
-        meshGoalKeeper.position.x +=  0.1;
-        console.log(meshGoalKeeper.position.x)
+        meshGoalKeeper.position.x += 0.1;
         if (meshGoalKeeper.position.x >= 4) {
             cancelAnimationFrame(kiper)
         }
-        else{
+        else {
             requestAnimationFrame(kiper)
         }
     }
     else {
-        console.log(random)
-    }    
+        // console.log(random)  
+    }
 }
 
 
@@ -111,7 +177,112 @@ field.load('assets/field/scene.gltf', function (gltf) {
 
     console.error(error);
 
-})
+});
+let textMesh = new THREE.Mesh();
+textMesh.position.z = -60
+
+let scoreMesh = new THREE.Mesh();
+
+
+
+function goalText() {
+
+
+    textMesh.position.z += 1
+    if (textMesh.position.z > -22) {
+        cancelAnimationFrame(goalText);
+    } else {
+        requestAnimationFrame(goalText);
+    }
+
+}
+
+let missMesh = new THREE.Mesh();
+
+function checkMiss() {
+    setTimeout(() => {
+        if (textMesh.visible == false) {
+            fontLoader.load(
+                // resource URL
+                'node_modules/three/examples/fonts/helvetiker_bold.typeface.json',
+
+                // onLoad callback
+                function (font) {
+                    const geometry = new THREE.TextGeometry('Miss!', {
+                        font: font,
+                        size: 4,
+                        height: 1,
+
+                    });
+
+                    missMesh = new THREE.Mesh(geometry, [
+                        new THREE.MeshPhongMaterial({ color: 0xFF0000 }),
+                        new THREE.MeshPhongMaterial({ color: 0xFF0000 })
+                    ]);
+
+                    missMesh.position.x = -6;
+                    missMesh.position.z = -30;
+                    missMesh.position.y = 5;
+
+                    scene.add(missMesh)
+
+                },
+
+                // onProgress callback
+                function (xhr) {
+                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+
+                // onError callback
+                function (err) {
+                    console.log('An error happened');
+                }
+            );
+        }
+
+    }, 2500)
+}
+
+
+fontLoader.load(
+    // resource URL
+    'node_modules/three/examples/fonts/helvetiker_bold.typeface.json',
+
+    // onLoad callback
+    function (font) {
+        const geometry = new THREE.TextGeometry('Goal!', {
+            font: font,
+            size: 4,
+            height: 1,
+
+        });
+
+        textMesh = new THREE.Mesh(geometry, [
+            new THREE.MeshPhongMaterial({ color: 0xad4000 }),
+            new THREE.MeshPhongMaterial({ color: 0x5c2301 })
+        ]);
+
+        textMesh.position.x = -6;
+        textMesh.position.z = -60;
+        textMesh.position.y = 5;
+        textMesh.visible = false
+
+        scene.add(textMesh)
+
+    },
+
+    // onProgress callback
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+
+    // onError callback
+    function (err) {
+        console.log('An error happened');
+    }
+);
+
+
 
 const gawang = new THREE.GLTFLoader();
 gawang.load('assets/gawang/scene.gltf', function (gltf) {
@@ -233,13 +404,15 @@ world.broadphase = new CANNON.NaiveBroadphase();
 let timeStamp = 1 / 60;
 
 const planeShape = new CANNON.Plane();
-const planeBody = new CANNON.Body({ shape: planeShape, mass: 0 });
+const planeMat = new CANNON.Material("test");
+const planeBody = new CANNON.Body({ shape: planeShape, mass: 0, material: planeMat });
 planeBody.position.set(0, -3, 0);
 planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
 world.addBody(planeBody)
 
 const gawangBack = new CANNON.Box(new CANNON.Vec3(5.7, 0.1, 2.5));
-const gawangBackBody = new CANNON.Body({ shape: gawangBack, mass: 0 });
+const gawangBackMat = new CANNON.Material("gawang_back");
+const gawangBackBody = new CANNON.Body({ shape: gawangBack, mass: 0, material: gawangBackMat });
 gawangBackBody.position.set(0, -0.7, -22.2);
 gawangBackBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2.7)
 world.addBody(gawangBackBody)
@@ -272,10 +445,15 @@ world.addBody(goalKeeperBody)
 // world.addBody(ballBody);
 
 let ball = new CANNON.Sphere(0.4);
-let ballBody = new CANNON.Body({ shape: ball, mass: 5 });
+let ballMat = new CANNON.Material("bola");
+let ballBody = new CANNON.Body({ shape: ball, mass: 5, material: ballMat });
 ballBody.position.set(0, -2, -8);
 ballBody.linearDamping = 0.31;
+ballBody.angularDamping = 0.20;
 world.addBody(ballBody);
+
+
+
 
 // ballBody.addEventListener("collide", function (e) {
 //     console.log(Math.abs(e.contact.getImpactVelocityAlongNormal()));
@@ -305,6 +483,62 @@ soccerBall.load('assets/soccer_ball/scene.gltf', function (gltf) {
     console.error(error);
 
 });
+
+ballBody.addEventListener('collide', function (e) {
+    if (e.body.id == 1) {
+        textMesh.visible = true
+        goalText();
+
+        if (scoreAdd == false) {
+            scene.remove(scoreMesh);
+
+            score += 1;
+            fontLoader.load(
+                // resource URL
+                'node_modules/three/examples/fonts/helvetiker_bold.typeface.json',
+
+                // onLoad callback
+                function (font) {
+                    const geometry = new THREE.TextGeometry('Score: ' + score, {
+                        font: font,
+                        size: 1,
+                        height: 1,
+
+                    });
+
+                    scoreMesh = new THREE.Mesh(geometry, [
+                        new THREE.MeshPhongMaterial({ color: 0xFFFFFF }),
+                        new THREE.MeshPhongMaterial({ color: 0xFF0000 })
+                    ]);
+
+                    scoreMesh.position.x = -30;
+                    scoreMesh.position.z = -30;
+                    scoreMesh.position.y = 12;
+                    scoreMesh.rotation.y = 0.8
+
+                    scene.add(scoreMesh)
+
+                },
+
+                // onProgress callback
+                function (xhr) {
+                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+
+                // onError callback
+                function (err) {
+                    console.log('An error happened');
+                }
+            );
+
+            scoreAdd = true;
+        }
+
+
+    }
+})
+
+
 
 // let speed = 0;
 // let acceleration = 0.002;
@@ -416,6 +650,8 @@ soccerBall.load('assets/soccer_ball/scene.gltf', function (gltf) {
 //     // }
 // }
 
+
+
 const clock = new THREE.Clock();
 function draw() {
     world.step(timeStamp);
@@ -432,6 +668,8 @@ function draw() {
     // controls.update();
     // moveBall();
     // checkForTarget();
+
+
     requestAnimationFrame(draw);
 }
 
